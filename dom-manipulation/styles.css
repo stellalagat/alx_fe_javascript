@@ -1,0 +1,92 @@
+/* Additional styles for enhanced user experience */
+
+/* Responsive design */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+  }
+  
+  .quote-text {
+    font-size: 1em;
+  }
+  
+  button {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .button-container button {
+    width: calc(50% - 5px);
+    display: inline-block;
+  }
+}
+
+/* Animation for quote transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quote-container {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Hover effects */
+#quoteDisplay:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Form animations */
+.form-container {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    transform: translateY(0);
+  }
+}
+
+/* Loading state */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Success and error message animations */
+.message-fade-in {
+  animation: messageFadeIn 0.3s ease-in;
+}
+
+@keyframes messageFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
