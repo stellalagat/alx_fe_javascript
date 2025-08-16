@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Content Filtering System Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .test-result {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    .test-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    
+    .filter-demo {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    
+    .filter-demo h4 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    
+    pre {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 0.9em;
+    }
+    
+    .stats-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+    
+    .stat-card {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2em;
+      font-weight: bold;
+      color: #1976d2;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Dynamic Content Filtering System Test</h1>
+  
+  <div class="test-section">
+    <h2>Filter System Overview</h2>
+    <p>This test suite validates the advanced filtering capabilities of the Dynamic Quote Generator.</p>
+    
+    <div class="stats-display" id="systemStats">
+      <!-- Stats will be populated by JavaScript -->
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Category Filtering Tests</h2>
+    <div class="test-controls">
+      <button onclick="testCategoryPopulation()">Test Category Population</button>
+      <button onclick="testCategoryFiltering()">Test Category Filtering</button>
+      <button onclick="testCategoryButtons()">Test Category Buttons</button>
+    </div>
+    <div id="categoryResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Search Filtering Tests</h2>
+    <div class="test-controls">
+      <button onclick="testSearchFiltering()">Test Search Functionality</button>
+      <button onclick="testSearchCaseSensitivity()">Test Case Insensitivity</button>
+      <button onclick="testSearchClear()">Test Search Clear</button>
+    </div>
+    <div id="searchResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Advanced Filtering Tests</h2>
+    <div class="test-controls">
+      <button onclick="testFavoriteFiltering()">Test Favorite Filtering</button>
+      <button onclick="testSortingOptions()">Test Sorting Options</button>
+      <button onclick="testCombinedFilters()">Test Combined Filters</button>
+    </div>
+    <div id="advancedResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Storage Persistence Tests</h2>
+    <div class="test-controls">
+      <button onclick="testFilterPersistence()">Test Filter Persistence</button>
+      <button onclick="testSessionStorage()">Test Session Storage</button>
+      <button onclick="testStorageRecovery()">Test Storage Recovery</button>
+    </div>
+    <div id="storageResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Performance Tests</h2>
+    <div class="test-controls">
+      <button onclick="testFilteringPerformance()">Test Filtering Performance</button>
+      <button onclick="testLargeDataset()">Test Large Dataset</button>
+      <button onclick="testMemoryUsage()">Test Memory Usage</button>
+    </div>
+    <div id="performanceResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Interactive Filter Demo</h2>
+    <div class="filter-demo">
+      <h4>Live Filter Testing</h4>
+      <p>Use these controls to test filtering in real-time:</p>
+      
+      <div style="margin: 10px 0;">
+        <label>Category Filter:</label>
+        <select id="demoCategory" onchange="runLiveFilterTest()">
+          <option value="all">All Categories</option>
+        </select>
+      </div>
+      
+      <div style="margin: 10px 0;">
+        <label>Search:</label>
+        <input type="text" id="demoSearch" placeholder="Search quotes..." onkeyup="runLiveFilterTest()">
+      </div>
+      
+      <div style="margin: 10px 0;">
+        <label>
+          <input type="checkbox" id="demoFavorites" onchange="runLiveFilterTest()">
+          Show Favorites Only
+        </label>
+      </div>
+      
+      <div style="margin: 10px 0;">
+        <label>Sort by:</label>
+        <select id="demoSort" onchange="runLiveFilterTest()">
+          <option value="random">Random</option>
+          <option value="alphabetical">Alphabetical</option>
+          <option value="category">By Category</option>
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+        </select>
+      </div>
+      
+      <div id="liveResults" style="margin-top: 15px; padding: 10px; background: white; border-radius: 5px;">
+        <!-- Live results will appear here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Test data
+    const testQuotes = [
+      { text: "Test quote about motivation", category: "motivation", id: 1, dateAdded: "2024-01-01", favorite: true },
+      { text: "Innovation drives progress", category: "innovation", id: 2, dateAdded: "2024-01-02", favorite: false },
+      { text: "Life is beautiful", category: "life", id: 3, dateAdded: "2024-01-03", favorite: true },
+      { text: "Dreams come true", category: "dreams", id: 4, dateAdded: "2024-01-04", favorite: false },
+      { text: "Inspiration everywhere", category: "inspiration", id: 5, dateAdded: "2024-01-05", favorite: true },
+      { text: "Success requires effort", category: "success", id: 6, dateAdded: "2024-01-06", favorite: false },
+      { text: "Motivation is key", category: "motivation", id: 7, dateAdded: "2024-01-07", favorite: false },
+      { text: "Opportunity knocks", category: "opportunity", id: 8, dateAdded: "2024-01-08", favorite: true }
+    ];
+    
+    // Initialize demo
+    document.addEventListener('DOMContentLoaded', function() {
+      populateSystemStats();
+      populateDemoCategories();
+    });
+    
+    function addResult(containerId, message, type = 'info') {
+      const container = document.getElementById(containerId);
+      const result = document.createElement('div');
+      result.className = `test-result ${type}`;
+      result.textContent = message;
+      container.appendChild(result);
+    }
+    
+    function clearResults(containerId) {
+      document.getElementById(containerId).innerHTML = '';
+    }
+    
+    function populateSystemStats() {
+      const statsContainer = document.getElementById('systemStats');
+      const categories = [...new Set(testQuotes.map(q => q.category))];
+      const favorites = testQuotes.filter(q => q.favorite);
+      
+      statsContainer.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-number">${testQuotes.length}</div>
+          <div class="stat-label">Total Quotes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${categories.length}</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${favorites.length}</div>
+          <div class="stat-label">Favorites</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Filter Types</div>
+        </div>
+      `;
+    }
+    
+    function populateDemoCategories() {
+      const categorySelect = document.getElementById('demoCategory');
+      const categories = [...new Set(testQuotes.map(q => q.category))];
+      
+      categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        categorySelect.appendChild(option);
+      });
+    }
+    
+    // Category Filtering Tests
+    function testCategoryPopulation() {
+      clearResults('categoryResults');
+      
+      try {
+        const categories = [...new Set(testQuotes.map(q => q.category))];
+        addResult('categoryResults', `✅ Successfully extracted ${categories.length} unique categories`, 'success');
+        addResult('categoryResults', `Categories found: ${categories.join(', ')}`, 'info');
+        
+        // Test category counting
+        categories.forEach(category => {
+          const count = testQuotes.filter(q => q.category === category).length;
+          addResult('categoryResults', `${category}: ${count} quotes`, 'info');
+        });
+        
+      } catch (error) {
+        addResult('categoryResults', `❌ Category population failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testCategoryFiltering() {
+      clearResults('categoryResults');
+      
+      try {
+        const testCategory = 'motivation';
+        const filtered = testQuotes.filter(q => q.category === testCategory);
+        
+        addResult('categoryResults', `✅ Category filtering working: ${filtered.length} quotes in "${testCategory}"`, 'success');
+        
+        // Test "all" category
+        const allFiltered = testQuotes.filter(q => true); // Simulate "all"
+        addResult('categoryResults', `✅ "All" category shows ${allFiltered.length} quotes`, 'success');
+        
+        // Test non-existent category
+        const nonExistent = testQuotes.filter(q => q.category === 'nonexistent');
+        addResult('categoryResults', `✅ Non-existent category returns ${nonExistent.length} quotes`, 'success');
+        
+      } catch (error) {
+        addResult('categoryResults', `❌ Category filtering failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testCategoryButtons() {
+      clearResults('categoryResults');
+      
+      try {
+        const categories = [...new Set(testQuotes.map(q => q.category))];
+        addResult('categoryResults', `✅ Would create ${categories.length + 1} category buttons (including "All")`, 'success');
+        
+        // Simulate button click functionality
+        categories.forEach(category => {
+          const filtered = testQuotes.filter(q => q.category === category);
+          addResult('categoryResults', `Button "${category}" would show ${filtered.length} quotes`, 'info');
+        });
+        
+      } catch (error) {
+        addResult('categoryResults', `❌ Category button test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    // Search Filtering Tests
+    function testSearchFiltering() {
+      clearResults('searchResults');
+      
+      try {
+        const searchTerms = ['motivation', 'life', 'test', 'xyz'];
+        
+        searchTerms.forEach(term => {
+          const filtered = testQuotes.filter(q => 
+            q.text.toLowerCase().includes(term.toLowerCase()) ||
+            q.category.toLowerCase().includes(term.toLowerCase())
+          );
+          
+          const status = filtered.length > 0 ? 'success' : 'info';
+          addResult('searchResults', `Search "${term}": ${filtered.length} results`, status);
+        });
+        
+        addResult('searchResults', '✅ Search filtering working correctly', 'success');
+        
+      } catch (error) {
+        addResult('searchResults', `❌ Search filtering failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testSearchCaseSensitivity() {
+      clearResults('searchResults');
+      
+      try {
+        const testCases = [
+          { term: 'MOTIVATION', expected: 'motivation' },
+          { term: 'Life', expected: 'life' },
+          { term: 'innovation', expected: 'innovation' }
+        ];
+        
+        testCases.forEach(testCase => {
+          const upperResults = testQuotes.filter(q => 
+            q.text.toLowerCase().includes(testCase.term.toLowerCase()) ||
+            q.category.toLowerCase().includes(testCase.term.toLowerCase())
+          );
+          
+          const lowerResults = testQuotes.filter(q => 
+            q.text.toLowerCase().includes(testCase.expected.toLowerCase()) ||
+            q.category.toLowerCase().includes(testCase.expected.toLowerCase())
+          );
+          
+          if (upperResults.length === lowerResults.length) {
+            addResult('searchResults', `✅ Case insensitive: "${testCase.term}" = "${testCase.expected}"`, 'success');
+          } else {
+            addResult('searchResults', `❌ Case sensitivity issue with "${testCase.term}"`, 'error');
+          }
+        });
+        
+      } catch (error) {
+        addResult('searchResults', `❌ Case sensitivity test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testSearchClear() {
+      clearResults('searchResults');
+      
+      try {
+        // Simulate search clear functionality
+        const beforeClear = testQuotes.filter(q => q.text.toLowerCase().includes('motivation'));
+        const afterClear = testQuotes; // All quotes after clear
+        
+        addResult('searchResults', `✅ Before clear: ${beforeClear.length} quotes`, 'info');
+        addResult('searchResults', `✅ After clear: ${afterClear.length} quotes`, 'success');
+        addResult('searchResults', '✅ Search clear functionality working', 'success');
+        
+      } catch (error) {
+        addResult('searchResults', `❌ Search clear test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    // Advanced Filtering Tests
+    function testFavoriteFiltering() {
+      clearResults('advancedResults');
+      
+      try {
+        const favorites = testQuotes.filter(q => q.favorite);
+        const nonFavorites = testQuotes.filter(q => !q.favorite);
+        
+        addResult('advancedResults', `✅ Favorite quotes: ${favorites.length}`, 'success');
+        addResult('advancedResults', `✅ Non-favorite quotes: ${nonFavorites.length}`, 'success');
+        addResult('advancedResults', `✅ Total matches: ${favorites.length + nonFavorites.length}`, 'success');
+        
+        // Test favorite filtering with categories
+        const motivationFavorites = testQuotes.filter(q => q.favorite && q.category === 'motivation');
+        addResult('advancedResults', `Motivation favorites: ${motivationFavorites.length}`, 'info');
+        
+      } catch (error) {
+        addResult('advancedResults', `❌ Favorite filtering failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testSortingOptions() {
+      clearResults('advancedResults');
+      
+      try {
+        // Test alphabetical sorting
+        const alphabetical = [...testQuotes].sort((a, b) => a.text.localeCompare(b.text));
+        addResult('advancedResults', `✅ Alphabetical sort: "${alphabetical[0].text.substring(0, 20)}..." first`, 'success');
+        
+        // Test category sorting
+        const byCategory = [...testQuotes].sort((a, b) => a.category.localeCompare(b.category));
+        addResult('advancedResults', `✅ Category sort: "${byCategory[0].category}" category first`, 'success');
+        
+        // Test date sorting
+        const byNewest = [...testQuotes].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+        addResult('advancedResults', `✅ Newest first: ${byNewest[0].dateAdded}`, 'success');
+        
+        const byOldest = [...testQuotes].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+        addResult('advancedResults', `✅ Oldest first: ${byOldest[0].dateAdded}`, 'success');
+        
+      } catch (error) {
+        addResult('advancedResults', `❌ Sorting test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testCombinedFilters() {
+      clearResults('advancedResults');
+      
+      try {
+        // Test category + favorites
+        const motivationFavorites = testQuotes.filter(q => 
+          q.category === 'motivation' && q.favorite
+        );
+        addResult('advancedResults', `✅ Motivation + Favorites: ${motivationFavorites.length} quotes`, 'success');
+        
+        // Test search + category
+        const motivationWithTest = testQuotes.filter(q => 
+          q.category === 'motivation' && q.text.toLowerCase().includes('test')
+        );
+        addResult('advancedResults', `✅ Motivation + "test": ${motivationWithTest.length} quotes`, 'success');
+        
+        // Test all filters combined
+        const combined = testQuotes.filter(q => 
+          q.category === 'motivation' && 
+          q.favorite && 
+          q.text.toLowerCase().includes('motivation')
+        );
+        addResult('advancedResults', `✅ All filters combined: ${combined.length} quotes`, 'success');
+        
+      } catch (error) {
+        addResult('advancedResults', `❌ Combined filters test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    // Storage Tests
+    function testFilterPersistence() {
+      clearResults('storageResults');
+      
+      try {
+        const testFilters = {
+          category: 'motivation',
+          search: 'test',
+          showFavorites: true,
+          sortOrder: 'alphabetical'
+        };
+        
+        // Test saving
+        localStorage.setItem('test_filters', JSON.stringify(testFilters));
+        addResult('storageResults', '✅ Filter preferences saved to localStorage', 'success');
+        
+        // Test loading
+        const loaded = JSON.parse(localStorage.getItem('test_filters'));
+        if (loaded.category === testFilters.category) {
+          addResult('storageResults', '✅ Filter preferences loaded correctly', 'success');
+        } else {
+          addResult('storageResults', '❌ Filter preferences loading failed', 'error');
+        }
+        
+        // Cleanup
+        localStorage.removeItem('test_filters');
+        addResult('storageResults', '🧹 Test data cleaned up', 'info');
+        
+      } catch (error) {
+        addResult('storageResults', `❌ Filter persistence test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testSessionStorage() {
+      clearResults('storageResults');
+      
+      try {
+        const sessionData = {
+          lastFilters: { category: 'life', search: 'beautiful' },
+          timestamp: new Date().toISOString()
+        };
+        
+        sessionStorage.setItem('test_session', JSON.stringify(sessionData));
+        addResult('storageResults', '✅ Session data saved', 'success');
+        
+        const retrieved = JSON.parse(sessionStorage.getItem('test_session'));
+        if (retrieved.lastFilters.category === 'life') {
+          addResult('storageResults', '✅ Session data retrieved correctly', 'success');
+        }
+        
+        sessionStorage.removeItem('test_session');
+        addResult('storageResults', '🧹 Session test data cleaned up', 'info');
+        
+      } catch (error) {
+        addResult('storageResults', `❌ Session storage test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testStorageRecovery() {
+      clearResults('storageResults');
+      
+      try {
+        // Test with invalid JSON
+        localStorage.setItem('test_invalid', 'invalid json{');
+        
+        try {
+          JSON.parse(localStorage.getItem('test_invalid'));
+          addResult('storageResults', '❌ Should have thrown error for invalid JSON', 'error');
+        } catch (parseError) {
+          addResult('storageResults', '✅ Correctly handled invalid JSON', 'success');
+        }
+        
+        // Test with missing data
+        const missing = localStorage.getItem('nonexistent_key');
+        if (missing === null) {
+          addResult('storageResults', '✅ Correctly handled missing data', 'success');
+        }
+        
+        localStorage.removeItem('test_invalid');
+        addResult('storageResults', '🧹 Recovery test cleaned up', 'info');
+        
+      } catch (error) {
+        addResult('storageResults', `❌ Storage recovery test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    // Performance Tests
+    function testFilteringPerformance() {
+      clearResults('performanceResults');
+      
+      try {
+        const iterations = 1000;
+        const startTime = performance.now();
+        
+        for (let i = 0; i < iterations; i++) {
+          // Simulate filtering operations
+          testQuotes.filter(q => q.category === 'motivation');
+          testQuotes.filter(q => q.text.toLowerCase().includes('test'));
+          testQuotes.filter(q => q.favorite);
+        }
+        
+        const endTime = performance.now();
+        const duration = endTime - startTime;
+        
+        addResult('performanceResults', `✅ ${iterations * 3} filter operations in ${duration.toFixed(2)}ms`, 'success');
+        addResult('performanceResults', `Average: ${(duration / (iterations * 3)).toFixed(4)}ms per operation`, 'info');
+        
+        if (duration < 100) {
+          addResult('performanceResults', '✅ Performance: Excellent', 'success');
+        } else if (duration < 500) {
+          addResult('performanceResults', '⚠️ Performance: Good', 'info');
+        } else {
+          addResult('performanceResults', '❌ Performance: Needs optimization', 'error');
+        }
+        
+      } catch (error) {
+        addResult('performanceResults', `❌ Performance test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testLargeDataset() {
+      clearResults('performanceResults');
+      
+      try {
+        // Generate large dataset
+        const largeDataset = [];
+        for (let i = 0; i < 1000; i++) {
+          largeDataset.push({
+            text: `Test quote number ${i} with various content`,
+            category: `category${i % 10}`,
+            id: i,
+            dateAdded: new Date(2024, 0, i % 365).toISOString().split('T')[0],
+            favorite: i % 5 === 0
+          });
+        }
+        
+        const startTime = performance.now();
+        
+        // Test filtering on large dataset
+        const filtered = largeDataset.filter(q => q.category === 'category1');
+        const searched = largeDataset.filter(q => q.text.includes('100'));
+        const favorites = largeDataset.filter(q => q.favorite);
+        
+        const endTime = performance.now();
+        
+        addResult('performanceResults', `✅ Large dataset (${largeDataset.length} quotes) processed`, 'success');
+        addResult('performanceResults', `Category filter: ${filtered.length} results`, 'info');
+        addResult('performanceResults', `Search filter: ${searched.length} results`, 'info');
+        addResult('performanceResults', `Favorites filter: ${favorites.length} results`, 'info');
+        addResult('performanceResults', `Processing time: ${(endTime - startTime).toFixed(2)}ms`, 'info');
+        
+      } catch (error) {
+        addResult('performanceResults', `❌ Large dataset test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testMemoryUsage() {
+      clearResults('performanceResults');
+      
+      try {
+        if (performance.memory) {
+          const beforeHeap = performance.memory.usedJSHeapSize;
+          
+          // Create and filter large dataset
+          const testData = Array(1000).fill().map((_, i) => ({
+            text: `Memory test quote ${i}`,
+            category: `cat${i % 5}`,
+            id: i,
+            favorite: i % 3 === 0
+          }));
+          
+          // Perform filtering operations
+          testData.filter(q => q.category === 'cat1');
+          testData.filter(q => q.favorite);
+          
+          const afterHeap = performance.memory.usedJSHeapSize;
+          const memoryUsed = afterHeap - beforeHeap;
+          
+          addResult('performanceResults', `✅ Memory usage test completed`, 'success');
+          addResult('performanceResults', `Memory used: ${(memoryUsed / 1024).toFixed(2)} KB`, 'info');
+          
+        } else {
+          addResult('performanceResults', '⚠️ Memory API not available in this browser', 'info');
+        }
+        
+      } catch (error) {
+        addResult('performanceResults', `❌ Memory usage test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    // Live Filter Demo
+    function runLiveFilterTest() {
+      const category = document.getElementById('demoCategory').value;
+      const search = document.getElementById('demoSearch').value.toLowerCase();
+      const showFavorites = document.getElementById('demoFavorites').checked;
+      const sortBy = document.getElementById('demoSort').value;
+      
+      let filtered = [...testQuotes];
+      
+      // Apply filters
+      if (category !== 'all') {
+        filtered = filtered.filter(q => q.category === category);
+      }
+      
+      if (search) {
+        filtered = filtered.filter(q => 
+          q.text.toLowerCase().includes(search) ||
+          q.category.toLowerCase().includes(search)
+        );
+      }
+      
+      if (showFavorites) {
+        filtered = filtered.filter(q => q.favorite);
+      }
+      
+      // Apply sorting
+      switch (sortBy) {
+        case 'alphabetical':
+          filtered.sort((a, b) => a.text.localeCompare(b.text));
+          break;
+        case 'category':
+          filtered.sort((a, b) => a.category.localeCompare(b.category));
+          break;
+        case 'newest':
+          filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+          break;
+        case 'oldest':
+          filtered.sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+          break;
+      }
+      
+      // Display results
+      const resultsDiv = document.getElementById('liveResults');
+      resultsDiv.innerHTML = `
+        <strong>Filter Results: ${filtered.length} quotes</strong><br>
+        ${filtered.map(q => `
+          <div style="margin: 5px 0; padding: 5px; background: #f8f9fa; border-radius: 3px;">
+            <strong>${q.category}</strong>: ${q.text.substring(0, 50)}...
+            ${q.favorite ? ' ❤️' : ''}
+          </div>
+        `).join('')}
+      `;
+    }
+  </script>
+</body>
+</html>

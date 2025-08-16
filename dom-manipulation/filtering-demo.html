@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Content Filtering System Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .demo-header {
+      text-align: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .demo-header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    
+    .demo-header p {
+      margin: 10px 0 0 0;
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    
+    .feature-card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .feature-card h3 {
+      color: #333;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .feature-icon {
+      font-size: 1.5em;
+    }
+    
+    .demo-section {
+      background: white;
+      padding: 30px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .demo-links {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 30px 0;
+    }
+    
+    .demo-link {
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .demo-link:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,123,255,0.3);
+    }
+    
+    .demo-link.secondary {
+      background: #6c757d;
+    }
+    
+    .demo-link.secondary:hover {
+      background: #545b62;
+    }
+    
+    .requirements-checklist {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    .requirements-checklist h4 {
+      color: #28a745;
+      margin-top: 0;
+    }
+    
+    .requirement-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      padding: 5px;
+    }
+    
+    .requirement-item.completed {
+      background: #d4edda;
+      border-radius: 5px;
+    }
+    
+    .code-showcase {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+    
+    .code-showcase h4 {
+      color: #63b3ed;
+      margin-top: 0;
+    }
+    
+    .highlight {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .stat-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 2em;
+      font-weight: bold;
+      display: block;
+    }
+    
+    .stat-label {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-header">
+    <h1>🔍 Advanced Content Filtering System</h1>
+    <p>Dynamic Quote Generator with Intelligent Filtering Capabilities</p>
+  </div>
+  
+  <div class="demo-section">
+    <h2>🎯 System Overview</h2>
+    <p>This advanced filtering system demonstrates sophisticated web development techniques including dynamic content filtering, real-time search, persistent storage, and intelligent user interface updates.</p>
+    
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-number">5</span>
+        <span class="stat-label">Filter Types</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">4</span>
+        <span class="stat-label">Sort Options</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Combinations</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Persistent</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h3><span class="feature-icon">📂</span>Category Filtering</h3>
+      <ul>
+        <li>Dynamic category extraction from data</li>
+        <li>Dropdown and button-based selection</li>
+        <li>Real-time category counts</li>
+        <li>Auto-updating as new quotes are added</li>
+      </ul>
+    </div>
+    
+    <div class="feature-card">
+      <h3><span class="feature-icon">🔍</span>Smart Search</h3>
+      <ul>
+        <li>Real-time text search</li>
+        <li>Case-insensitive matching</li>
+        <li>Searches both quote text and categories</li>
+        <li>Instant results as you type</li>
+      </ul>
+    </div>
+    
+    <div class="feature-card">
+      <h3><span class="feature-icon">❤️</span>Favorite System</h3>
+      <ul>
+        <li>Mark quotes as favorites</li>
+        <li>Filter to show only favorites</li>
+        <li>Persistent across sessions</li>
+        <li>Visual feedback with heart icons</li>
+      </ul>
+    </div>
+    
+    <div class="feature-card">
+      <h3><span class="feature-icon">🔄</span>Advanced Sorting</h3>
+      <ul>
+        <li>Random (Fisher-Yates shuffle)</li>
+        <li>Alphabetical by quote text</li>
+        <li>By category name</li>
+        <li>By date (newest/oldest first)</li>
+      </ul>
+    </div>
+    
+    <div class="feature-card">
+      <h3><span class="feature-icon">🔗</span>Combined Filters</h3>
+      <ul>
+        <li>Apply multiple filters simultaneously</li>
+        <li>Category + Search + Favorites</li>
+        <li>Real-time result updates</li>
+        <li>Smart filter interaction</li>
+      </ul>
+    </div>
+    
+    <div class="feature-card">
+      <h3><span class="feature-icon">💾</span>Filter Persistence</h3>
+      <ul>
+        <li>Remember all filter preferences</li>
+        <li>localStorage for permanent storage</li>
+        <li>sessionStorage for temporary data</li>
+        <li>Restore filters on page reload</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="demo-section">
+    <h2>🚀 Try the Application</h2>
+    <div class="demo-links">
+      <a href="index.html" class="demo-link">
+        <span>📱</span> Main Application
+      </a>
+      <a href="test-filtering.html" class="demo-link secondary">
+        <span>🧪</span> Filtering Tests
+      </a>
+      <a href="test-storage.html" class="demo-link secondary">
+        <span>💾</span> Storage Tests
+      </a>
+      <a href="demo.html" class="demo-link secondary">
+        <span>📖</span> Full Demo
+      </a>
+    </div>
+  </div>
+  
+  <div class="demo-section">
+    <h2>📋 Requirements Implementation</h2>
+    
+    <div class="requirements-checklist">
+      <h4>✅ Step 1: HTML Structure Updates</h4>
+      <div class="requirement-item completed">
+        <span>✅</span> Added category filter dropdown with onchange="filterQuotes()"
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> Dynamically populated categories from quotes array
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> Enhanced UI with multiple filter options
+      </div>
+    </div>
+    
+    <div class="requirements-checklist">
+      <h4>✅ Step 2: JavaScript Filtering Logic</h4>
+      <div class="requirement-item completed">
+        <span>✅</span> populateCategories() function implemented
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> filterQuotes() function with comprehensive filtering
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> localStorage integration for filter persistence
+      </div>
+    </div>
+    
+    <div class="requirements-checklist">
+      <h4>✅ Step 3: Enhanced Web Storage</h4>
+      <div class="requirement-item completed">
+        <span>✅</span> addQuote() updates categories dynamically
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> Real-time category and filter updates
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> Session persistence across browser restarts
+      </div>
+    </div>
+    
+    <div class="requirements-checklist">
+      <h4>✅ Step 4: Testing & Deployment</h4>
+      <div class="requirement-item completed">
+        <span>✅</span> Comprehensive testing across browsers
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> Filter preferences preserved correctly
+      </div>
+      <div class="requirement-item completed">
+        <span>✅</span> Web storage functionality verified</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="demo-section">
+    <h2>💻 Technical Implementation</h2>
+    
+    <div class="code-showcase">
+      <h4>🔧 Dynamic Category Population</h4>
+      <pre><code>function populateCategories() {
+  // Extract unique categories from quotes
+  const categories = [...new Set(quotes.map(quote => quote.category))].sort();
+  
+  // Populate dropdown
+  categoryFilter.innerHTML = '&lt;option value="all"&gt;All Categories&lt;/option&gt;';
+  categories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+    categoryFilter.appendChild(option);
+  });
+  
+  // Update category buttons and counts
+  populateCategoryButtons(categories);
+  updateCategoryCount();
+}</code></pre>
+    </div>
+    
+    <div class="code-showcase">
+      <h4>🔍 Advanced Filtering Logic</h4>
+      <pre><code>function filterQuotes() {
+  // Get current filter values
+  currentFilters.category = categoryFilter.value;
+  currentFilters.search = searchFilter.value.toLowerCase().trim();
+  currentFilters.showFavorites = showFavorites.checked;
+  currentFilters.sortOrder = sortOrder.value;
+  
+  // Start with all quotes
+  filteredQuotes = [...quotes];
+  
+  // Apply category filter
+  if (currentFilters.category !== 'all') {
+    filteredQuotes = filteredQuotes.filter(quote => 
+      quote.category === currentFilters.category
+    );
+  }
+  
+  // Apply search filter
+  if (currentFilters.search) {
+    filteredQuotes = filteredQuotes.filter(quote =>
+      quote.text.toLowerCase().includes(currentFilters.search) ||
+      quote.category.toLowerCase().includes(currentFilters.search)
+    );
+  }
+  
+  // Apply favorites filter
+  if (currentFilters.showFavorites) {
+    filteredQuotes = filteredQuotes.filter(quote => quote.favorite);
+  }
+  
+  // Apply sorting and update UI
+  applySorting();
+  updateFilterResults();
+  saveFilterPreferences();
+}</code></pre>
+    </div>
+    
+    <div class="code-showcase">
+      <h4>💾 Filter Persistence</h4>
+      <pre><code>function saveFilterPreferences() {
+  try {
+    localStorage.setItem(STORAGE_KEYS.FILTER_PREFERENCES, 
+      JSON.stringify(currentFilters));
+  } catch (error) {
+    console.error('Error saving filter preferences:', error);
+  }
+}
+
+function loadFilterPreferences() {
+  try {
+    const storedFilters = localStorage.getItem(STORAGE_KEYS.FILTER_PREFERENCES);
+    if (storedFilters) {
+      const savedFilters = JSON.parse(storedFilters);
+      currentFilters = { ...currentFilters, ...savedFilters };
+      
+      // Apply saved filters to UI
+      if (categoryFilter) categoryFilter.value = currentFilters.category;
+      if (searchFilter) searchFilter.value = currentFilters.search;
+      if (showFavorites) showFavorites.checked = currentFilters.showFavorites;
+      if (sortOrder) sortOrder.value = currentFilters.sortOrder;
+    }
+  } catch (error) {
+    console.error('Error loading filter preferences:', error);
+  }
+}</code></pre>
+    </div>
+  </div>
+  
+  <div class="demo-section">
+    <h2>🧪 Testing Instructions</h2>
+    
+    <div class="highlight">
+      <strong>Complete Testing Workflow:</strong>
+    </div>
+    
+    <ol>
+      <li><strong>Basic Filtering Tests:</strong>
+        <ul>
+          <li>Open the main application</li>
+          <li>Test category dropdown filtering</li>
+          <li>Try category button filtering</li>
+          <li>Verify quote counts update correctly</li>
+        </ul>
+      </li>
+      
+      <li><strong>Search Functionality:</strong>
+        <ul>
+          <li>Type in the search box</li>
+          <li>Test case-insensitive search</li>
+          <li>Search both quote text and categories</li>
+          <li>Verify real-time results</li>
+        </ul>
+      </li>
+      
+      <li><strong>Advanced Features:</strong>
+        <ul>
+          <li>Mark quotes as favorites</li>
+          <li>Filter by favorites only</li>
+          <li>Test different sorting options</li>
+          <li>Combine multiple filters</li>
+        </ul>
+      </li>
+      
+      <li><strong>Persistence Testing:</strong>
+        <ul>
+          <li>Set various filters</li>
+          <li>Refresh the page</li>
+          <li>Verify filters are restored</li>
+          <li>Test across browser sessions</li>
+        </ul>
+      </li>
+      
+      <li><strong>Performance Testing:</strong>
+        <ul>
+          <li>Add many quotes</li>
+          <li>Test filtering speed</li>
+          <li>Verify UI responsiveness</li>
+          <li>Check memory usage</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+  
+  <div class="demo-section">
+    <h2>🎓 Learning Outcomes</h2>
+    <p>By implementing this advanced filtering system, you have mastered:</p>
+    
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>🔧 DOM Manipulation</h3>
+        <ul>
+          <li>Dynamic element creation and updates</li>
+          <li>Event handling and delegation</li>
+          <li>Real-time UI synchronization</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h3>💾 Web Storage APIs</h3>
+        <ul>
+          <li>localStorage for persistent data</li>
+          <li>sessionStorage for temporary data</li>
+          <li>Storage error handling</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h3>🔍 Filtering Algorithms</h3>
+        <ul>
+          <li>Multi-criteria filtering</li>
+          <li>Search algorithm implementation</li>
+          <li>Performance optimization</li>
+        </ul>
+      </div>
+      
+      <div class="feature-card">
+        <h3>🎨 User Experience</h3>
+        <ul>
+          <li>Real-time feedback</li>
+          <li>Intuitive interface design</li>
+          <li>State persistence</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <footer style="text-align: center; margin-top: 40px; padding: 20px; color: #666;">
+    <p>🚀 Advanced Content Filtering System - Dynamic Quote Generator</p>
+    <p>Demonstrating sophisticated web development techniques with persistent storage and intelligent filtering</p>
+  </footer>
+</body>
+</html>

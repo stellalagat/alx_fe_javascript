@@ -1,0 +1,134 @@
+{
+  "quotes": [
+    {
+      "text": "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+      "category": "resilience",
+      "id": 101,
+      "dateAdded": "2024-01-15",
+      "favorite": true
+    },
+    {
+      "text": "The way to get started is to quit talking and begin doing.",
+      "category": "action",
+      "id": 102,
+      "dateAdded": "2024-01-16",
+      "favorite": false
+    },
+    {
+      "text": "Your time is limited, so don't waste it living someone else's life.",
+      "category": "authenticity",
+      "id": 103,
+      "dateAdded": "2024-01-17",
+      "favorite": true
+    },
+    {
+      "text": "If life were predictable it would cease to be life, and be without flavor.",
+      "category": "life",
+      "id": 104,
+      "dateAdded": "2024-01-18",
+      "favorite": false
+    },
+    {
+      "text": "If you look at what you have in life, you'll always have more.",
+      "category": "gratitude",
+      "id": 105,
+      "dateAdded": "2024-01-19",
+      "favorite": true
+    },
+    {
+      "text": "Life is what happens when you're busy making other plans.",
+      "category": "mindfulness",
+      "id": 106,
+      "dateAdded": "2024-01-20",
+      "favorite": false
+    },
+    {
+      "text": "The future belongs to those who believe in the beauty of their dreams.",
+      "category": "dreams",
+      "id": 107,
+      "dateAdded": "2024-01-21",
+      "favorite": true
+    },
+    {
+      "text": "Spread love everywhere you go. Let no one ever come to you without leaving happier.",
+      "category": "kindness",
+      "id": 108,
+      "dateAdded": "2024-01-22",
+      "favorite": false
+    },
+    {
+      "text": "When you reach the end of your rope, tie a knot in it and hang on.",
+      "category": "perseverance",
+      "id": 109,
+      "dateAdded": "2024-01-23",
+      "favorite": true
+    },
+    {
+      "text": "Don't judge each day by the harvest you reap but by the seeds that you plant.",
+      "category": "patience",
+      "id": 110,
+      "dateAdded": "2024-01-24",
+      "favorite": false
+    },
+    {
+      "text": "The only person you are destined to become is the person you decide to be.",
+      "category": "self-determination",
+      "id": 111,
+      "dateAdded": "2024-01-25",
+      "favorite": true
+    },
+    {
+      "text": "Go confidently in the direction of your dreams. Live the life you have imagined.",
+      "category": "confidence",
+      "id": 112,
+      "dateAdded": "2024-01-26",
+      "favorite": false
+    },
+    {
+      "text": "In the end, we will remember not the words of our enemies, but the silence of our friends.",
+      "category": "friendship",
+      "id": 113,
+      "dateAdded": "2024-01-27",
+      "favorite": true
+    },
+    {
+      "text": "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.",
+      "category": "beauty",
+      "id": 114,
+      "dateAdded": "2024-01-28",
+      "favorite": false
+    },
+    {
+      "text": "It is better to be hated for what you are than to be loved for what you are not.",
+      "category": "authenticity",
+      "id": 115,
+      "dateAdded": "2024-01-29",
+      "favorite": true
+    }
+  ],
+  "exportDate": "2024-01-30T10:30:00.000Z",
+  "version": "2.0",
+  "totalQuotes": 15,
+  "categories": [
+    "resilience",
+    "action", 
+    "authenticity",
+    "life",
+    "gratitude",
+    "mindfulness",
+    "dreams",
+    "kindness",
+    "perseverance",
+    "patience",
+    "self-determination",
+    "confidence",
+    "friendship",
+    "beauty"
+  ],
+  "filterPreferences": {
+    "category": "all",
+    "search": "",
+    "showFavorites": false,
+    "sortOrder": "random"
+  }
+}
