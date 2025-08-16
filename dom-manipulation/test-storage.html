@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Storage and JSON Testing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .test-result {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    pre {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web Storage and JSON Testing</h1>
+  
+  <div class="test-section">
+    <h2>Storage Tests</h2>
+    <button onclick="testLocalStorage()">Test Local Storage</button>
+    <button onclick="testSessionStorage()">Test Session Storage</button>
+    <button onclick="clearAllStorage()">Clear All Storage</button>
+    <div id="storageResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>JSON Export/Import Tests</h2>
+    <button onclick="testJSONExport()">Test JSON Export</button>
+    <button onclick="createTestJSONFile()">Create Test JSON File</button>
+    <input type="file" id="testImport" accept=".json" onchange="testJSONImport(event)" />
+    <div id="jsonResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Data Validation Tests</h2>
+    <button onclick="testDataValidation()">Test Data Validation</button>
+    <div id="validationResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Current Storage Contents</h2>
+    <button onclick="displayStorageContents()">Show Storage Contents</button>
+    <div id="storageContents"></div>
+  </div>
+
+  <script>
+    // Test data
+    const testQuotes = [
+      { text: "Test quote 1 for storage testing", category: "test" },
+      { text: "Test quote 2 for storage testing", category: "test" },
+      { text: "Test quote 3 for storage testing", category: "validation" }
+    ];
+    
+    function addResult(containerId, message, type = 'info') {
+      const container = document.getElementById(containerId);
+      const result = document.createElement('div');
+      result.className = `test-result ${type}`;
+      result.textContent = message;
+      container.appendChild(result);
+    }
+    
+    function clearResults(containerId) {
+      document.getElementById(containerId).innerHTML = '';
+    }
+    
+    function testLocalStorage() {
+      clearResults('storageResults');
+      
+      try {
+        // Test saving to localStorage
+        const testData = JSON.stringify(testQuotes);
+        localStorage.setItem('test_quotes', testData);
+        addResult('storageResults', '✅ Successfully saved test data to localStorage', 'success');
+        
+        // Test loading from localStorage
+        const loadedData = localStorage.getItem('test_quotes');
+        if (loadedData) {
+          const parsedData = JSON.parse(loadedData);
+          if (parsedData.length === testQuotes.length) {
+            addResult('storageResults', '✅ Successfully loaded and parsed data from localStorage', 'success');
+          } else {
+            addResult('storageResults', '❌ Data integrity check failed', 'error');
+          }
+        } else {
+          addResult('storageResults', '❌ Failed to load data from localStorage', 'error');
+        }
+        
+        // Test storage size
+        const storageSize = new Blob([loadedData]).size;
+        addResult('storageResults', `📊 Test data size: ${storageSize} bytes`, 'info');
+        
+        // Clean up
+        localStorage.removeItem('test_quotes');
+        addResult('storageResults', '🧹 Cleaned up test data', 'info');
+        
+      } catch (error) {
+        addResult('storageResults', `❌ localStorage test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testSessionStorage() {
+      clearResults('storageResults');
+      
+      try {
+        // Test saving to sessionStorage
+        const testPrefs = {
+          selectedCategory: 'test',
+          timestamp: new Date().toISOString()
+        };
+        sessionStorage.setItem('test_preferences', JSON.stringify(testPrefs));
+        addResult('storageResults', '✅ Successfully saved test preferences to sessionStorage', 'success');
+        
+        // Test loading from sessionStorage
+        const loadedPrefs = sessionStorage.getItem('test_preferences');
+        if (loadedPrefs) {
+          const parsedPrefs = JSON.parse(loadedPrefs);
+          if (parsedPrefs.selectedCategory === 'test') {
+            addResult('storageResults', '✅ Successfully loaded preferences from sessionStorage', 'success');
+          } else {
+            addResult('storageResults', '❌ Preferences data integrity check failed', 'error');
+          }
+        } else {
+          addResult('storageResults', '❌ Failed to load preferences from sessionStorage', 'error');
+        }
+        
+        // Clean up
+        sessionStorage.removeItem('test_preferences');
+        addResult('storageResults', '🧹 Cleaned up test preferences', 'info');
+        
+      } catch (error) {
+        addResult('storageResults', `❌ sessionStorage test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function testJSONExport() {
+      clearResults('jsonResults');
+      
+      try {
+        const exportData = {
+          quotes: testQuotes,
+          exportDate: new Date().toISOString(),
+          version: "1.0",
+          totalQuotes: testQuotes.length
+        };
+        
+        const jsonString = JSON.stringify(exportData, null, 2);
+        addResult('jsonResults', '✅ Successfully created JSON export string', 'success');
+        
+        // Test Blob creation
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        addResult('jsonResults', `✅ Successfully created Blob (${blob.size} bytes)`, 'success');
+        
+        // Test URL creation
+        const url = URL.createObjectURL(blob);
+        addResult('jsonResults', '✅ Successfully created download URL', 'success');
+        
+        // Show JSON preview
+        const preview = document.createElement('pre');
+        preview.textContent = jsonString.substring(0, 300) + '...';
+        document.getElementById('jsonResults').appendChild(preview);
+        
+        // Clean up
+        URL.revokeObjectURL(url);
+        addResult('jsonResults', '🧹 Cleaned up URL object', 'info');
+        
+      } catch (error) {
+        addResult('jsonResults', `❌ JSON export test failed: ${error.message}`, 'error');
+      }
+    }
+    
+    function createTestJSONFile() {
+      const testData = {
+        quotes: [
+          { text: "This is a test quote for import testing", category: "test" },
+          { text: "Another test quote with different category", category: "import" },
+          { text: "Third test quote for validation", category: "validation" }
+        ],
+        exportDate: new Date().toISOString(),
+        version: "1.0",
+        totalQuotes: 3
+      };
+      
+      const jsonString = JSON.stringify(testData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = 'test-quotes.json';
+      downloadLink.textContent = 'Download Test JSON File';
+      downloadLink.style.display = 'block';
+      downloadLink.style.margin = '10px 0';
+      downloadLink.style.color = '#007bff';
+      
+      document.getElementById('jsonResults').appendChild(downloadLink);
+      
+      downloadLink.addEventListener('click', () => {
+        setTimeout(() => URL.revokeObjectURL(url), 100);
+      });
+    }
+    
+    function testJSONImport(event) {
+      clearResults('jsonResults');
+      const file = event.target.files[0];
+      
+      if (!file) {
+        addResult('jsonResults', '❌ No file selected', 'error');
+        return;
+      }
+      
+      if (!file.name.toLowerCase().endsWith('.json')) {
+        addResult('jsonResults', '❌ File is not a JSON file', 'error');
+        return;
+      }
+      
+      const fileReader = new FileReader();
+      
+      fileReader.onload = function(e) {
+        try {
+          const fileContent = e.target.result;
+          addResult('jsonResults', '✅ Successfully read file content', 'success');
+          
+          const parsedData = JSON.parse(fileContent);
+          addResult('jsonResults', '✅ Successfully parsed JSON', 'success');
+          
+          // Validate structure
+          if (parsedData.quotes && Array.isArray(parsedData.quotes)) {
+            addResult('jsonResults', `✅ Valid structure found with ${parsedData.quotes.length} quotes`, 'success');
+            
+            // Show preview
+            const preview = document.createElement('pre');
+            preview.textContent = JSON.stringify(parsedData, null, 2).substring(0, 500) + '...';
+            document.getElementById('jsonResults').appendChild(preview);
+          } else {
+            addResult('jsonResults', '❌ Invalid JSON structure', 'error');
+          }
+          
+        } catch (error) {
+          addResult('jsonResults', `❌ JSON import test failed: ${error.message}`, 'error');
+        }
+      };
+      
+      fileReader.onerror = function() {
+        addResult('jsonResults', '❌ Error reading file', 'error');
+      };
+      
+      fileReader.readAsText(file);
+    }
+    
+    function testDataValidation() {
+      clearResults('validationResults');
+      
+      const testCases = [
+        { text: "Valid quote", category: "valid", expected: true },
+        { text: "", category: "invalid", expected: false },
+        { text: "Short", category: "invalid", expected: false },
+        { text: "Valid quote with proper length", category: "", expected: false },
+        { text: "Another valid quote for testing", category: "test", expected: true }
+      ];
+      
+      testCases.forEach((testCase, index) => {
+        const isValid = testCase.text.length >= 10 && testCase.category.length > 0;
+        const result = isValid === testCase.expected ? '✅' : '❌';
+        const status = isValid === testCase.expected ? 'success' : 'error';
+        
+        addResult('validationResults', 
+          `${result} Test ${index + 1}: "${testCase.text.substring(0, 20)}..." - ${isValid ? 'Valid' : 'Invalid'}`, 
+          status
+        );
+      });
+    }
+    
+    function clearAllStorage() {
+      localStorage.clear();
+      sessionStorage.clear();
+      addResult('storageResults', '🧹 All storage cleared', 'info');
+    }
+    
+    function displayStorageContents() {
+      clearResults('storageContents');
+      
+      // Show localStorage contents
+      addResult('storageContents', '📦 LocalStorage Contents:', 'info');
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        const preview = value.length > 100 ? value.substring(0, 100) + '...' : value;
+        
+        const content = document.createElement('pre');
+        content.textContent = `${key}: ${preview}`;
+        document.getElementById('storageContents').appendChild(content);
+      }
+      
+      // Show sessionStorage contents
+      addResult('storageContents', '🗂️ SessionStorage Contents:', 'info');
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        const value = sessionStorage.getItem(key);
+        const preview = value.length > 100 ? value.substring(0, 100) + '...' : value;
+        
+        const content = document.createElement('pre');
+        content.textContent = `${key}: ${preview}`;
+        document.getElementById('storageContents').appendChild(content);
+      }
+      
+      if (localStorage.length === 0 && sessionStorage.length === 0) {
+        addResult('storageContents', 'No data found in storage', 'info');
+      }
+    }
+  </script>
+</body>
+</html>
