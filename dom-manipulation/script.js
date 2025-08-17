@@ -1278,3 +1278,22 @@ document
 
 populateCategories();
 showRandomQuote();
+// ✅ Sync quotes (server takes precedence)
+async function syncQuotes() {
+  try {
+    const serverQuotes = await fetchQuotesFromServer();
+
+    // Simple conflict resolution: server wins
+    const localCount = quotes.length;
+    quotes = serverQuotes;
+    saveQuotes();
+    populateCategories();
+    showRandomQuote();
+
+    // Notify both detailed + simple message
+    notifyUser("✅ Quotes synced with server!");
+    console.log(`Local (${localCount}) replaced by Server (${serverQuotes.length}).`);
+  } catch (error) {
+    notifyUser("⚠️ Sync failed: " + error.message, true);
+  }
+}
