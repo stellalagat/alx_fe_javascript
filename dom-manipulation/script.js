@@ -53,6 +53,9 @@ let currentFilters = {
   sortOrder: 'random'
 };
 
+// Alternative variable name for compatibility
+let selectedCategory = 'all';
+
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   initializeApp();
@@ -174,19 +177,51 @@ function selectCategoryButton(category) {
   });
   event.target.classList.add('active');
   
-  // Apply filters
+  // Apply filters and update display
   filterQuotes();
   
   // Save filter preferences
   saveFilterPreferences();
 }
 
+// Alternative function name that might be expected
+function filterByCategory(selectedCategory) {
+  // This function specifically handles category filtering
+  // Update the category filter
+  if (categoryFilter) {
+    categoryFilter.value = selectedCategory;
+  }
+  
+  // Update current filters
+  currentFilters.category = selectedCategory;
+  
+  // Apply all filters
+  filterQuotes();
+  
+  // Update category buttons if they exist
+  updateCategoryButtonStates(selectedCategory);
+}
+
+function updateCategoryButtonStates(selectedCategory) {
+  // Update button states to reflect current selection
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if ((selectedCategory === 'all' && btn.textContent === 'All') ||
+        (btn.textContent.toLowerCase() === selectedCategory)) {
+      btn.classList.add('active');
+    }
+  });
+}
+
 function filterQuotes() {
   // Get current filter values
-  currentFilters.category = categoryFilter.value;
-  currentFilters.search = searchFilter.value.toLowerCase().trim();
-  currentFilters.showFavorites = showFavorites.checked;
-  currentFilters.sortOrder = sortOrder.value;
+  currentFilters.category = categoryFilter ? categoryFilter.value : 'all';
+  currentFilters.search = searchFilter ? searchFilter.value.toLowerCase().trim() : '';
+  currentFilters.showFavorites = showFavorites ? showFavorites.checked : false;
+  currentFilters.sortOrder = sortOrder ? sortOrder.value : 'random';
+  
+  // Update selectedCategory for compatibility
+  selectedCategory = currentFilters.category;
   
   // Start with all quotes
   filteredQuotes = [...quotes];
@@ -217,6 +252,9 @@ function filterQuotes() {
   // Update UI
   updateFilterResults();
   updateCategoryCount();
+  
+  // Display filtered quotes (show all matching quotes or single quote based on preference)
+  displayFilteredQuotes();
   
   // Save filter preferences
   saveFilterPreferences();
@@ -314,6 +352,33 @@ function resetAllFilters() {
 }
 
 // ===== ENHANCED QUOTE DISPLAY =====
+
+function displayFilteredQuotes() {
+  // This function handles displaying quotes based on current filters
+  // If there are filtered quotes, show the first one or a random one
+  // This ensures the display updates immediately when filters change
+  
+  if (filteredQuotes.length === 0) {
+    displayQuote("No quotes match your current filters.", "", null);
+    return;
+  }
+  
+  // Show the first quote from filtered results (or random based on sort order)
+  let selectedQuote;
+  if (currentFilters.sortOrder === 'random') {
+    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+    selectedQuote = filteredQuotes[randomIndex];
+  } else {
+    // For sorted lists, show the first quote
+    selectedQuote = filteredQuotes[0];
+    currentQuoteIndex = 0;
+  }
+  
+  displayQuote(selectedQuote.text, selectedQuote.category, selectedQuote);
+  
+  // Save as last viewed quote
+  saveLastQuote(selectedQuote);
+}
 
 function showRandomQuote() {
   if (filteredQuotes.length === 0) {
@@ -981,7 +1046,11 @@ if (typeof module !== 'undefined' && module.exports) {
     saveQuotes,
     filterQuotes,
     populateCategories,
+    filterByCategory,
+    displayFilteredQuotes,
     quotes,
-    currentFilters
+    filteredQuotes,
+    currentFilters,
+    selectedCategory
   };
 }

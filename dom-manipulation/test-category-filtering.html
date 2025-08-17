@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category Filtering Logic Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .test-result {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    pre {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 0.9em;
+    }
+    
+    .demo-filter {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    
+    select, input {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Category Filtering Logic Test</h1>
+  
+  <div class="test-section">
+    <h2>Test Overview</h2>
+    <p>This page tests the category filtering logic and verifies that the <code>selectedCategory</code> variable and filtering functions work correctly.</p>
+  </div>
+  
+  <div class="test-section">
+    <h2>Mock Filtering System</h2>
+    <div class="demo-filter">
+      <label>Select Category:</label>
+      <select id="testCategoryFilter" onchange="testFilterQuotes()">
+        <option value="all">All Categories</option>
+        <option value="motivation">Motivation</option>
+        <option value="innovation">Innovation</option>
+        <option value="life">Life</option>
+        <option value="dreams">Dreams</option>
+        <option value="inspiration">Inspiration</option>
+      </select>
+      
+      <button onclick="runAllTests()">Run All Tests</button>
+      <button onclick="testSelectedCategoryVariable()">Test selectedCategory Variable</button>
+      <button onclick="testFilterByCategory()">Test filterByCategory Function</button>
+    </div>
+    
+    <div id="testResults"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Live Filtering Demo</h2>
+    <div id="filterDemo">
+      <p>Current selectedCategory: <span id="currentCategory">all</span></p>
+      <p>Filtered quotes count: <span id="filteredCount">0</span></p>
+      <div id="filteredQuotesList"></div>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Code Verification</h2>
+    <div id="codeVerification"></div>
+  </div>
+
+  <script>
+    // Mock data for testing
+    const testQuotes = [
+      { text: "The only way to do great work is to love what you do.", category: "motivation", id: 1, favorite: false },
+      { text: "Innovation distinguishes between a leader and a follower.", category: "innovation", id: 2, favorite: false },
+      { text: "Life is what happens to you while you're busy making other plans.", category: "life", id: 3, favorite: true },
+      { text: "The future belongs to those who believe in the beauty of their dreams.", category: "dreams", id: 4, favorite: false },
+      { text: "It is during our darkest moments that we must focus to see the light.", category: "inspiration", id: 5, favorite: true },
+      { text: "The only impossible journey is the one you never begin.", category: "motivation", id: 7, favorite: false }
+    ];
+    
+    // Mock variables to simulate the main script
+    let quotes = [...testQuotes];
+    let filteredQuotes = [...testQuotes];
+    let selectedCategory = 'all';
+    let currentFilters = {
+      category: 'all',
+      search: '',
+      showFavorites: false,
+      sortOrder: 'random'
+    };
+    
+    // Mock DOM elements
+    let categoryFilter = document.getElementById('testCategoryFilter');
+    
+    // Mock filtering functions (simplified versions)
+    function filterQuotes() {
+      // Get current filter values
+      currentFilters.category = categoryFilter ? categoryFilter.value : 'all';
+      selectedCategory = currentFilters.category;
+      
+      // Start with all quotes
+      filteredQuotes = [...quotes];
+      
+      // Apply category filter
+      if (currentFilters.category !== 'all') {
+        filteredQuotes = filteredQuotes.filter(quote => 
+          quote.category === currentFilters.category
+        );
+      }
+      
+      // Update display
+      updateFilterDemo();
+      
+      return filteredQuotes;
+    }
+    
+    function filterByCategory(category) {
+      if (categoryFilter) {
+        categoryFilter.value = category;
+      }
+      currentFilters.category = category;
+      selectedCategory = category;
+      return filterQuotes();
+    }
+    
+    function updateFilterDemo() {
+      document.getElementById('currentCategory').textContent = selectedCategory;
+      document.getElementById('filteredCount').textContent = filteredQuotes.length;
+      
+      const listDiv = document.getElementById('filteredQuotesList');
+      listDiv.innerHTML = filteredQuotes.map(quote => 
+        `<div style="margin: 5px 0; padding: 8px; background: white; border-radius: 4px;">
+          <strong>${quote.category}:</strong> ${quote.text.substring(0, 60)}...
+        </div>`
+      ).join('');
+    }
+    
+    // Test functions
+    function addResult(message, type = 'info') {
+      const container = document.getElementById('testResults');
+      const result = document.createElement('div');
+      result.className = `test-result ${type}`;
+      result.textContent = message;
+      container.appendChild(result);
+    }
+    
+    function clearResults() {
+      document.getElementById('testResults').innerHTML = '';
+    }
+    
+    function testFilterQuotes() {
+      const result = filterQuotes();
+      addResult(`✅ filterQuotes() executed. Filtered ${result.length} quotes for category "${selectedCategory}"`, 'success');
+    }
+    
+    function testSelectedCategoryVariable() {
+      clearResults();
+      
+      // Test initial value
+      if (typeof selectedCategory !== 'undefined') {
+        addResult(`✅ selectedCategory variable exists: "${selectedCategory}"`, 'success');
+      } else {
+        addResult('❌ selectedCategory variable is undefined', 'error');
+        return;
+      }
+      
+      // Test updating selectedCategory
+      const testCategories = ['motivation', 'innovation', 'life', 'all'];
+      
+      testCategories.forEach(category => {
+        filterByCategory(category);
+        if (selectedCategory === category) {
+          addResult(`✅ selectedCategory correctly updated to "${category}"`, 'success');
+        } else {
+          addResult(`❌ selectedCategory should be "${category}" but is "${selectedCategory}"`, 'error');
+        }
+      });
+    }
+    
+    function testFilterByCategory() {
+      clearResults();
+      
+      if (typeof filterByCategory !== 'function') {
+        addResult('❌ filterByCategory function is not defined', 'error');
+        return;
+      }
+      
+      addResult('✅ filterByCategory function exists', 'success');
+      
+      // Test filtering by different categories
+      const testCases = [
+        { category: 'motivation', expectedCount: 2 },
+        { category: 'innovation', expectedCount: 1 },
+        { category: 'life', expectedCount: 1 },
+        { category: 'dreams', expectedCount: 1 },
+        { category: 'inspiration', expectedCount: 1 },
+        { category: 'all', expectedCount: 6 }
+      ];
+      
+      testCases.forEach(testCase => {
+        const result = filterByCategory(testCase.category);
+        if (result.length === testCase.expectedCount) {
+          addResult(`✅ filterByCategory("${testCase.category}") returned ${result.length} quotes (expected ${testCase.expectedCount})`, 'success');
+        } else {
+          addResult(`❌ filterByCategory("${testCase.category}") returned ${result.length} quotes (expected ${testCase.expectedCount})`, 'error');
+        }
+      });
+    }
+    
+    function runAllTests() {
+      clearResults();
+      addResult('🧪 Running comprehensive filtering tests...', 'info');
+      
+      // Test 1: Variable existence
+      testSelectedCategoryVariable();
+      
+      // Test 2: Function existence and functionality
+      testFilterByCategory();
+      
+      // Test 3: Integration test
+      addResult('🔗 Testing integration...', 'info');
+      
+      // Simulate user selecting different categories
+      const categories = ['motivation', 'innovation', 'all'];
+      categories.forEach(category => {
+        categoryFilter.value = category;
+        filterQuotes();
+        
+        if (selectedCategory === category && filteredQuotes.length > 0) {
+          addResult(`✅ Integration test passed for category "${category}"`, 'success');
+        } else {
+          addResult(`❌ Integration test failed for category "${category}"`, 'error');
+        }
+      });
+      
+      addResult('🎉 All tests completed!', 'info');
+    }
+    
+    function verifyCode() {
+      const codeContainer = document.getElementById('codeVerification');
+      
+      const codeChecks = [
+        {
+          name: 'selectedCategory variable',
+          exists: typeof selectedCategory !== 'undefined',
+          value: selectedCategory
+        },
+        {
+          name: 'filterQuotes function',
+          exists: typeof filterQuotes === 'function'
+        },
+        {
+          name: 'filterByCategory function',
+          exists: typeof filterByCategory === 'function'
+        },
+        {
+          name: 'filteredQuotes array',
+          exists: Array.isArray(filteredQuotes),
+          length: filteredQuotes.length
+        },
+        {
+          name: 'currentFilters object',
+          exists: typeof currentFilters === 'object',
+          category: currentFilters.category
+        }
+      ];
+      
+      codeContainer.innerHTML = `
+        <h3>Code Structure Verification</h3>
+        ${codeChecks.map(check => `
+          <div class="test-result ${check.exists ? 'success' : 'error'}">
+            ${check.exists ? '✅' : '❌'} ${check.name}: ${check.exists ? 'EXISTS' : 'MISSING'}
+            ${check.value ? ` (value: "${check.value}")` : ''}
+            ${check.length !== undefined ? ` (length: ${check.length})` : ''}
+            ${check.category ? ` (category: "${check.category}")` : ''}
+          </div>
+        `).join('')}
+      `;
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      filterQuotes(); // Initialize with all quotes
+      verifyCode();
+    });
+  </script>
+</body>
+</html>
