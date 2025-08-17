@@ -1053,4 +1053,25 @@ if (typeof module !== 'undefined' && module.exports) {
     currentFilters,
     selectedCategory
   };
+  async function syncWithServer() {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const serverQuotes = await response.json();
+
+    // Simulate server sending quotes [{text, category}]
+    // Conflict resolution: Server wins
+    quotes = serverQuotes.map(p => ({ text: p.title, category: "Server" }));
+    saveQuotes();
+    populateCategories();
+    showRandomQuote();
+
+    alert("Quotes synced with server (server data took precedence).");
+  } catch (error) {
+    console.error("Sync failed:", error);
+  }
+}
+
+// Simulate periodic sync
+setInterval(syncWithServer, 60000); // every 1 min
+
 }
